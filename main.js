@@ -6,9 +6,11 @@ const emailForm = document.getElementById('femail');
 
 const mensajeForm = document.getElementById('fmensaje');
 
-const btn = document.getElementById('fsubmit')
+const btn = document.getElementById('fsubmit');
 
 const p = document.querySelector('p');
+
+const deleteInfo = document.getElementById('fdelete');
 
 // funcion para que no recarge la pagina al enviar el form
 
@@ -44,10 +46,36 @@ console.log(localStorage); */
 
 // Guardar en Local Storage los datos de contacto enviados de cada usuario (ir guardandolos todos)
 
-function savedUsers(e) {
+function allUsers(e) {
     e.preventDefault();
-    let valorNombre = nombreForm.value;
-    let valorEmail = emailForm.value;
-    let valorMensaje = mensajeForm.value;
-    
+    const valorNombre = nombreForm.value;
+    const valorEmail = emailForm.value;
+    const valorMensaje = mensajeForm.value;
+    const user = {
+        nombre: valorNombre,
+        email: valorEmail,
+        mensaje: valorMensaje
+    };
+    let savedUsers = JSON.parse(localStorage.getItem('users')) || [];
+    savedUsers.push(user);
+    localStorage.setItem('users', JSON.stringify(savedUsers));
+    console.log(localStorage);
 }
+
+btn.addEventListener('click', allUsers);
+
+// Mostrar los datos de los contactos guardados en el DOM
+
+function loadUsers() {
+    const userContainer = document.getElementById('user-container');
+    const savedUsers = JSON.parse(localStorage.getItem('users')) || [];
+    userContainer.innerHTML = '';
+    for (let i = 0; i < savedUsers.length; i++) {
+        const pUser = document.createElement('p');
+        pUser.textContent = `Nombre: ${savedUsers[i].nombre}. Email: ${savedUsers[i].email}. Mensaje: ${savedUsers[i].mensaje}`;
+        userContainer.appendChild(pUser);
+    }
+}
+
+btn.addEventListener('click', loadUsers);
+
